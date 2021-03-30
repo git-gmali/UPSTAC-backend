@@ -19,90 +19,88 @@ import java.util.Set;
 @ToString
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(unique = true)
-    private String userName;
+  @Column(unique = true)
+  private String userName;
 
-    @Column
-    @JsonIgnore
-    @ToString.Exclude
-    private String password;
+  @Column
+  @JsonIgnore
+  @ToString.Exclude
+  private String password;
 
-    private LocalDateTime created;
+  private LocalDateTime created;
 
-    private LocalDate dateOfBirth;
-
-
-    private LocalDateTime updated;
-
-    private String firstName;
-
-    private AccountStatus status;
-
-    @Column(unique = true)
-    private String email;
+  private LocalDate dateOfBirth;
 
 
-    private String lastName;
+  private LocalDateTime updated;
+
+  private String firstName;
+
+  private AccountStatus status;
+
+  @Column(unique = true)
+  private String email;
 
 
-    private Gender gender;
-
-    @Column(unique = true)
-    private String phoneNumber;
-    private String address;
-
-    private Integer pinCode;
-
-    //CascadeType.PERSIST has issues with many to many which makes us not use CascadeType.ALL
-    //So Using  other Cascades other than CascadeType.PERSIST
-//    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.REFRESH,CascadeType.DETACH})
-//    @JoinTable(name = "USER_ROLES", joinColumns = {
-//            @JoinColumn(name = "USER_ID") }, inverseJoinColumns = {
-//            @JoinColumn(name = "ROLE_ID") })
-//    private Set<Role> roles;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles;
+  private String lastName;
 
 
-    public boolean doesRoleIsDoctor() {
+  private Gender gender;
 
-        return doesUserHasRole("DOCTOR");
+  @Column(unique = true)
+  private String phoneNumber;
+  private String address;
+
+  private Integer pinCode;
+
+  // CascadeType.PERSIST has issues with many to many which makes us not use CascadeType.ALL
+  // So Using other Cascades other than CascadeType.PERSIST
+  // @ManyToMany(fetch = FetchType.EAGER, cascade =
+  // {CascadeType.MERGE,CascadeType.REFRESH,CascadeType.DETACH})
+  // @JoinTable(name = "USER_ROLES", joinColumns = {
+  // @JoinColumn(name = "USER_ID") }, inverseJoinColumns = {
+  // @JoinColumn(name = "ROLE_ID") })
+  // private Set<Role> roles;
+
+  @ManyToMany(fetch = FetchType.EAGER)
+  private Set<Role> roles;
 
 
-    }
+  public boolean doesRoleIsDoctor() {
 
-    public boolean doesUserHasRole(String s) {
-        return roles.stream()
-                .filter(role -> {
-                    return role.getName().equalsIgnoreCase(s);
-                })
-                .findFirst()
-                .isPresent();
-    }
+    return doesUserHasRole("DOCTOR");
 
-    public boolean doesRoleIsUser() {
-        return doesUserHasRole("USER");
-    }
 
-    public boolean doesRoleIsAuthority() {
-        return doesUserHasRole("GOVERNMENT_AUTHORITY");
-    }
+  }
 
-    public boolean doesRoleIsTester() {
-        return doesUserHasRole("TESTER");
-    }
+  public boolean doesUserHasRole(String s) {
+    return roles.stream().filter(role -> {
+      return role.getName().equalsIgnoreCase(s);
+    }).findFirst().isPresent();
+  }
 
-    public Integer getAge(){
+  public boolean doesRoleIsUser() {
+    return doesUserHasRole("USER");
+  }
 
-        if(null != dateOfBirth)
-            return LocalDate.now().getYear() - dateOfBirth.getYear();
-        else
-            return 0;
-    }
+  public boolean doesRoleIsAuthority() {
+    return doesUserHasRole("GOVERNMENT_AUTHORITY");
+  }
+
+  public boolean doesRoleIsTester() {
+    return doesUserHasRole("TESTER");
+  }
+
+  public Integer getAge() {
+
+    if (null != dateOfBirth)
+      return LocalDate.now().getYear() - dateOfBirth.getYear();
+    else
+      return 0;
+  }
 
 }

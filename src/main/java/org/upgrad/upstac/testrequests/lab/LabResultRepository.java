@@ -8,22 +8,22 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface LabResultRepository extends JpaRepository<LabResult,Long> {
+public interface LabResultRepository extends JpaRepository<LabResult, Long> {
 
 
-    Optional<LabResult> findById(Long id);
-
-
-
-    void deleteById(Long id);
+  Optional<LabResult> findById(Long id);
 
 
 
+  void deleteById(Long id);
 
 
-    List<LabResult> findByTester(User user);
-    Optional<LabResult> findByTesterAndRequest(User user,TestRequest testRequest);
-    Optional<LabResult> findByRequest(TestRequest request);
+
+  List<LabResult> findByTester(User user);
+
+  Optional<LabResult> findByTesterAndRequest(User user, TestRequest testRequest);
+
+  Optional<LabResult> findByRequest(TestRequest request);
 
 
 }

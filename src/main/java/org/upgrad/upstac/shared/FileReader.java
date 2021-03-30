@@ -12,46 +12,47 @@ import java.util.stream.Collectors;
 
 public class FileReader {
 
-    public static String readFromClassPath(String fileName) {
+  public static String readFromClassPath(String fileName) {
 
-        try {
-            return read(fileName);
-        } catch (IOException e) {
-            throw new AppException(e);
-        }
+    try {
+      return read(fileName);
+    } catch (IOException e) {
+      throw new AppException(e);
     }
-
-    
-
-    public static String read(String fileName) throws IOException {
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        try (BufferedReader buffer = new BufferedReader(new InputStreamReader(classloader.getResourceAsStream(fileName), StandardCharsets.UTF_8))) {
-            return buffer.lines().collect(Collectors.joining("\n"));
-
-        }
-    }
+  }
 
 
-    public static InputStream readAsStream(String fileName) throws IOException {
 
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        return classloader.getResourceAsStream(fileName);
-    }
-
-
-    public static MultipartFile getMultipartFileFrom(String fileName) {
-
-        try {
-
-
-            return new MyMultiPartFile(fileName, readAsStream(fileName));
-
-
-        } catch (IOException e) {
-            throw new AppException(e);
-        }
+  public static String read(String fileName) throws IOException {
+    ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+    try (BufferedReader buffer = new BufferedReader(
+        new InputStreamReader(classloader.getResourceAsStream(fileName), StandardCharsets.UTF_8))) {
+      return buffer.lines().collect(Collectors.joining("\n"));
 
     }
+  }
+
+
+  public static InputStream readAsStream(String fileName) throws IOException {
+
+    ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+    return classloader.getResourceAsStream(fileName);
+  }
+
+
+  public static MultipartFile getMultipartFileFrom(String fileName) {
+
+    try {
+
+
+      return new MyMultiPartFile(fileName, readAsStream(fileName));
+
+
+    } catch (IOException e) {
+      throw new AppException(e);
+    }
+
+  }
 
 
 }

@@ -13,19 +13,20 @@ import org.upgrad.upstac.users.UserService;
 @Component
 public class UserLoggedInService {
 
-    private UserService userService;
+  private UserService userService;
 
-    @Autowired
-    public UserLoggedInService(UserService userService) {
-        this.userService = userService;
-    }
+  @Autowired
+  public UserLoggedInService(UserService userService) {
+    this.userService = userService;
+  }
 
 
-    public User getLoggedInUser() {
-            UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return userService.findByUserName(principal.getUsername());
+  public User getLoggedInUser() {
+    UserDetails principal =
+        (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    return userService.findByUserName(principal.getUsername());
 
-    }
+  }
 
 
 }

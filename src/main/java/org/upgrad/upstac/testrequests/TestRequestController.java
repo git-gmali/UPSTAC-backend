@@ -21,48 +21,48 @@ import static org.upgrad.upstac.exception.UpgradResponseStatusException.asBadReq
 @RestController
 public class TestRequestController {
 
-    Logger log = LoggerFactory.getLogger(TestRequestController.class);
+  Logger log = LoggerFactory.getLogger(TestRequestController.class);
 
 
-    @Autowired
-    private TestRequestService testRequestService;
+  @Autowired
+  private TestRequestService testRequestService;
 
-    @Autowired
-    private UserLoggedInService userLoggedInService;
+  @Autowired
+  private UserLoggedInService userLoggedInService;
 
-    @Autowired
-    private TestRequestQueryService testRequestQueryService;
+  @Autowired
+  private TestRequestQueryService testRequestQueryService;
 
 
-    @PostMapping("/api/testrequests")
-    public TestRequest createRequest(@RequestBody CreateTestRequest testRequest) {
-        try {
-            User user = userLoggedInService.getLoggedInUser();
-            TestRequest result = testRequestService.createTestRequestFrom(user, testRequest);
-            return result;
-        }  catch (AppException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
-
+  @PostMapping("/api/testrequests")
+  public TestRequest createRequest(@RequestBody CreateTestRequest testRequest) {
+    try {
+      User user = userLoggedInService.getLoggedInUser();
+      TestRequest result = testRequestService.createTestRequestFrom(user, testRequest);
+      return result;
+    } catch (AppException e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
-    @GetMapping("/api/testrequests")
-    public List<TestRequest> requestHistory() {
+  }
 
-        User user = userLoggedInService.getLoggedInUser();
-        return testRequestService.getHistoryFor(user);
+  @GetMapping("/api/testrequests")
+  public List<TestRequest> requestHistory() {
 
-
-    }
-
-    @GetMapping("/api/testrequests/{id}")
-    public Optional<TestRequest> getById(@PathVariable Long id) {
+    User user = userLoggedInService.getLoggedInUser();
+    return testRequestService.getHistoryFor(user);
 
 
-        return testRequestQueryService.getTestRequestById(id);
+  }
+
+  @GetMapping("/api/testrequests/{id}")
+  public Optional<TestRequest> getById(@PathVariable Long id) {
 
 
-    }
+    return testRequestQueryService.getTestRequestById(id);
+
+
+  }
 
 
 

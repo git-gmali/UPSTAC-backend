@@ -19,34 +19,34 @@ import java.util.stream.Collectors;
 public class UpgradUserDetailsService implements UserDetailsService {
 
 
-	private UserService userService;
+  private UserService userService;
 
 
 
-	private static final Logger log = LoggerFactory.getLogger(UpgradUserDetailsService.class);
+  private static final Logger log = LoggerFactory.getLogger(UpgradUserDetailsService.class);
 
-	@Autowired
-	public UpgradUserDetailsService(UserService userService) {
-		this.userService = userService;
-	}
+  @Autowired
+  public UpgradUserDetailsService(UserService userService) {
+    this.userService = userService;
+  }
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userService.findByUserName(username);
-		log.info("loadUserByUsername " + user.toString());
-		if(user == null){
-			throw new UsernameNotFoundException("Invalid username or password.");
-		}
-		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), getAuthority(user));
-	}
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    User user = userService.findByUserName(username);
+    log.info("loadUserByUsername " + user.toString());
+    if (user == null) {
+      throw new UsernameNotFoundException("Invalid username or password.");
+    }
+    return new org.springframework.security.core.userdetails.User(user.getUserName(),
+        user.getPassword(), getAuthority(user));
+  }
 
-	private Set<SimpleGrantedAuthority> getAuthority(User user) {
+  private Set<SimpleGrantedAuthority> getAuthority(User user) {
 
-		return user.getRoles()
-				.stream()
-				.map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-				.collect(Collectors.toSet());
+    return user.getRoles().stream()
+        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+        .collect(Collectors.toSet());
 
-	}
+  }
 
 }

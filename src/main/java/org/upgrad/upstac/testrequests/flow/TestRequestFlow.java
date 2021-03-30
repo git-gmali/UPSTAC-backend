@@ -14,27 +14,23 @@ import java.time.LocalDate;
 public class TestRequestFlow {
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  Long id;
 
 
 
-    @ManyToOne
-    @JsonIgnore
-    private TestRequest request;
+  @ManyToOne
+  @JsonIgnore
+  private TestRequest request;
 
-    private RequestStatus fromStatus ;
-    private RequestStatus toStatus ;
+  private RequestStatus fromStatus;
+  private RequestStatus toStatus;
 
-    @ManyToOne
-    private User changedBy;
+  @ManyToOne
+  private User changedBy;
 
-    private LocalDate happenedOn=LocalDate.now();
-
-
-
-
+  private LocalDate happenedOn = LocalDate.now();
 
 
 

@@ -14,30 +14,24 @@ import java.time.LocalDate;
 public class Consultation {
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    @ToString.Exclude
-    private TestRequest request;
+  @OneToOne(fetch = FetchType.LAZY)
+  @JsonIgnore
+  @ToString.Exclude
+  private TestRequest request;
 
-    private DoctorSuggestion suggestion;
-
-
-    private String comments;
-
-    private LocalDate updatedOn;
-
-    @ManyToOne
-    User doctor;
+  private DoctorSuggestion suggestion;
 
 
+  private String comments;
 
+  private LocalDate updatedOn;
 
-
-
+  @ManyToOne
+  User doctor;
 
 
 

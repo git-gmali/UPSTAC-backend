@@ -25,99 +25,100 @@ import static org.upgrad.upstac.exception.UpgradResponseStatusException.asForbid
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+  @Autowired
+  private UserService userService;
 
 
-    @Autowired
-    UserLoggedInService userLoggedInService;
+  @Autowired
+  UserLoggedInService userLoggedInService;
 
 
-    @Autowired
-    ChangePasswordService changePasswordService;
+  @Autowired
+  ChangePasswordService changePasswordService;
 
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+  private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
 
-    @PreAuthorize("hasRole('GOVERNMENT_AUTHORITY')")
-    @GetMapping
-    public List<User> listUsers() {
+  @PreAuthorize("hasRole('GOVERNMENT_AUTHORITY')")
+  @GetMapping
+  public List<User> listUsers() {
 
-        return userService.findAll();
+    return userService.findAll();
+  }
+
+
+  @PreAuthorize("hasAnyRole('USER','GOVERNMENT_AUTHORITY','TESTER','DOCTOR')")
+  @GetMapping(value = "/details")
+  public User getMyDetails() {
+
+    return userLoggedInService.getLoggedInUser();
+  }
+
+
+  @PreAuthorize("hasAnyRole('USER','GOVERNMENT_AUTHORITY','TESTER','DOCTOR')")
+  @PutMapping(value = "/changepassword")
+  public ResponseEntity<?> changePassword(
+      @RequestBody ChangePasswordRequest changePasswordRequest) {
+
+
+    try {
+      log.info("No errors to change based on" + changePasswordRequest.getPassword());
+
+      User user = userLoggedInService.getLoggedInUser();
+      changePasswordService.changePassword(user, changePasswordRequest);
+      return ResponseEntity.ok("Succesfully Changed");
+
+    } catch (ConstraintViolationException e) {
+      throw asConstraintViolation(e);
+    } catch (ForbiddenException e) {
+      throw asForbidden(e.getMessage());
     }
 
 
-    @PreAuthorize("hasAnyRole('USER','GOVERNMENT_AUTHORITY','TESTER','DOCTOR')")
-    @GetMapping(value = "/details")
-    public User getMyDetails() {
+  }
 
-        return userLoggedInService.getLoggedInUser();
+  @PreAuthorize("hasAnyRole('USER','GOVERNMENT_AUTHORITY','TESTER','DOCTOR')")
+  @DeleteMapping(value = "/closeaccount")
+  public ResponseEntity<?> closeAccount() {
+
+    User user = userLoggedInService.getLoggedInUser();
+    deleteUserByName(user.getUserName());
+
+
+    return ResponseEntity.ok("Succesfully Closed Account");
+  }
+
+
+  @PreAuthorize("hasAnyRole('GOVERNMENT_AUTHORITY')")
+  @DeleteMapping(value = "/deleteuser/{username}")
+  public ResponseEntity<?> deleteUser(@PathVariable String username) {
+
+
+    deleteUserByName(username);
+
+
+    return ResponseEntity.ok("Succesfully removed User");
+  }
+
+  public void deleteUserByName(@PathVariable String username) {
+    User user = userService.findByUserName(username);
+    userService.updateStatusAndSave(user, AccountStatus.DELETED);
+  }
+
+
+  @PreAuthorize("hasAnyRole('USER','GOVERNMENT_AUTHORITY','TESTER','DOCTOR')")
+  @PutMapping
+  public User updateUserDetails(@RequestBody UpdateUserDetailRequest updateUserDetailRequest) {
+    try {
+      User user = userLoggedInService.getLoggedInUser();
+      return userService.updateUserDetails(user, updateUserDetailRequest);
+    } catch (ConstraintViolationException e) {
+      throw asConstraintViolation(e);
     }
 
 
-    @PreAuthorize("hasAnyRole('USER','GOVERNMENT_AUTHORITY','TESTER','DOCTOR')")
-    @PutMapping(value = "/changepassword")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
-
-
-        try {
-            log.info("No errors to change based on" + changePasswordRequest.getPassword());
-
-            User user = userLoggedInService.getLoggedInUser();
-            changePasswordService.changePassword(user, changePasswordRequest);
-            return ResponseEntity.ok("Succesfully Changed");
-
-        } catch (ConstraintViolationException e) {
-            throw asConstraintViolation(e);
-        }catch (ForbiddenException e) {
-            throw asForbidden(e.getMessage());
-        }
-
-
-    }
-
-    @PreAuthorize("hasAnyRole('USER','GOVERNMENT_AUTHORITY','TESTER','DOCTOR')")
-    @DeleteMapping(value = "/closeaccount")
-    public ResponseEntity<?> closeAccount() {
-
-        User user = userLoggedInService.getLoggedInUser();
-        deleteUserByName(user.getUserName());
-
-
-        return ResponseEntity.ok("Succesfully Closed Account");
-    }
-
-
-    @PreAuthorize("hasAnyRole('GOVERNMENT_AUTHORITY')")
-    @DeleteMapping(value = "/deleteuser/{username}")
-    public ResponseEntity<?> deleteUser(@PathVariable String username) {
-
-
-        deleteUserByName(username);
-
-
-        return ResponseEntity.ok("Succesfully removed User");
-    }
-
-    public void deleteUserByName(@PathVariable String username) {
-        User user = userService.findByUserName(username);
-        userService.updateStatusAndSave(user, AccountStatus.DELETED);
-    }
-
-
-    @PreAuthorize("hasAnyRole('USER','GOVERNMENT_AUTHORITY','TESTER','DOCTOR')")
-    @PutMapping
-    public User updateUserDetails(@RequestBody UpdateUserDetailRequest updateUserDetailRequest) {
-        try {
-            User user = userLoggedInService.getLoggedInUser();
-            return userService.updateUserDetails(user,updateUserDetailRequest);
-        } catch (ConstraintViolationException e) {
-            throw asConstraintViolation(e);
-        }
-
-
-    }
+  }
 
 
 }

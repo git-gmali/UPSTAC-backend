@@ -7,8 +7,8 @@ import javax.validation.constraints.NotNull;
 @Data
 public class CreateConsultationRequest {
 
-    @NotNull
-    private DoctorSuggestion suggestion;
+  @NotNull
+  private DoctorSuggestion suggestion;
 
-    private String comments;
+  private String comments;
 }
