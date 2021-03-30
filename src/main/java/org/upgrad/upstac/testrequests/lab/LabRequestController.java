@@ -54,12 +54,7 @@ public class LabRequestController {
   @GetMapping("/to-be-tested")
   @PreAuthorize("hasAnyRole('TESTER')")
   public List<TestRequest> getForTests() {
-
-
     return testRequestQueryService.findBy(RequestStatus.INITIATED);
-
-
-
   }
 
   @GetMapping
@@ -70,6 +65,7 @@ public class LabRequestController {
     // Only the logged in valid tester shall be accessing the list of requests assigned to.
     User aUser = userLoggedInService.getLoggedInUser();
 
+    // Verify if the logged in user is the tester.
     if (aUser.doesRoleIsTester()) {
       log.info(
           "LabRequestController:getForTester - The logged in user is a tester hence fetch the request list");

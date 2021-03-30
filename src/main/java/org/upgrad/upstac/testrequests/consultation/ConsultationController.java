@@ -66,6 +66,7 @@ public class ConsultationController {
 
     User aUser = userLoggedInService.getLoggedInUser();
 
+    // verify if the logged in user is the doctor.
     if (aUser.doesRoleIsDoctor()) {
       log.info(
           "ConsultationController:getForDoctor - Get the test requests assigned to doctor as the logged in user is the doctor");
@@ -85,6 +86,8 @@ public class ConsultationController {
     // Assign API request for doctor to assign the requests to herself
     try {
       User aUser = userLoggedInService.getLoggedInUser();
+
+      // verify if the logged in user is the doctor.
       if (aUser.doesRoleIsDoctor()) {
         log.info(
             "ConsultationController:assignForConsultation - Assign the test request for consultation.");
@@ -111,6 +114,7 @@ public class ConsultationController {
     try {
       User aUser = userLoggedInService.getLoggedInUser();
 
+      // verify if the logged in user is the doctor.
       if (aUser.doesRoleIsDoctor()) {
         log.info("ConsultationController:updateConsultation - Update the consultation.");
         return testRequestUpdateService.updateConsultation(id, testResult, aUser);
